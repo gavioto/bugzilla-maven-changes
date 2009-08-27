@@ -1,0 +1,89 @@
+~~
+~~ bugzillaRelease Maven Mojo. Plugin to close release on Bugzilla when make release with Maven.
+~~ Copyright (C) 2009 Autentia Real Business Solutions S.L.
+~~
+~~ This program is free software: you can redistribute it and/or modify
+~~ it under the terms of the GNU General Public License as published by
+~~ the Free Software Foundation, either version 3 of the License.
+~~
+~~ This program is distributed in the hope that it will be useful,
+~~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+~~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+~~ GNU General Public License for more details.
+~~
+~~ You should have received a copy of the GNU General Public License
+~~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+~~
+~~ This program is free software: you can redistribute it and/or modify
+~~ it under the terms of the GNU General Public License as published by
+~~ the Free Software Foundation, either version 3 of the License.
+~~
+~~ This program is distributed in the hope that it will be useful,
+~~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+~~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+~~ GNU General Public License for more details.
+~~
+~~ You should have received a copy of the GNU General Public License
+~~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+~~
+
+Desarrolladores
+~~~~~~~~~~~~~~~~~~~
+
+	La solución adoptada para automatizar las tareas en el Bugzilla al generar una nueva versión, es crear un plugin de Maven que 
+	se conecte directamente al Bugzilla responsable de llevar a cabo las acciones en el Bugzilla.
+
+	Para ver como empezar a crear un plugin de maven podéis ver este tutorial {{{http://www.adictosaltrabajo.com/tutoriales/tutoriales.php?pagina=PluginsMaven}("Desarrollo de Plugins para Maven")}} que explica como hacer un plugin de Maven sencillo.
+
+* Proceso principal    
+~~~~~~~~~~~~
+	El proceso principal del plugin se ejecuta en el método "execute()" de la clase "com.autentia.mvn.plugin.release.bugzilla.ReleaseBugzillaMojo", realizando los siguientes pasos:
+	
+	* Preprocesamiento de parámetros: Para controlar si seguir con la ejecución y preparar los datos necesarios para el resto del proceso. Preguntando al usuario los nombres de las versiones (a generar y de desarrollo)
+	
+    * Login en el Bugzilla: Iniciamos una sesión con el servidor del Bugzilla.
+    
+    * Crear una nueva versión del producto: Para el producto del que se está generando la versión, se crea una nueva versión en el Bugzilla a la que poder asignar futuros bugs.
+    
+    * Recuperar la lista de bugs a cerrar del Bugzilla: Se obtiene la lista de bugs solucionados pendientes de cerrar asociados a la versión (target_milestone) que se está generando, y se pasan a "status=CLOSED".  
+    
+    * Crear un nuevo milestone: Se crea un nuevo "milestone" en el bugzilla para poder ser asignado como "target_milestone" en los bugs aún no solucionados.
+    
+    * Recuperar la lista de bugs a cambiar el "target_milestone" del Bugzilla: Se obtiene la lista de bugs aún no resueltos que tienen como "target_milestone" la versión que se está generando, y se cambia el "target_milestone" al nuevo "milestone" creado en el paso anterior.
+    
+    <<Nota>>: La interactuación con el Bugzilla, navegación HTTP, se ha realizado apoyándose en la librería HttpUnit.
+
+* Parámetros del plugin
+~~~~~~~~~~~~
+	Parámeteros que necesita nuestro plugin para interactuar con el Bugzilla y llevar a cabo las acciones:
+
+	* productName: Nombre del producto en el Bugzilla del que obtenemos la lista de bugs. Obligatorio. 
+	
+    * bugzillaUser: Usuario para el login en el Bugzilla. Obligatorio.
+    
+    * bugzillaPassword: Contraseña del usuario para el login en el Bugzilla. Obligatorio.
+    
+    * loginPage: Página de login en el Bugzilla. (Por defecto "index.cgi").
+    
+    * loginRequired: Parámetro para indicar si es necesario hacer login en el Bugzilla para recuperar la lista de bugs. (Por defecto "true").
+    
+    * parentOnly: Al tener los proyectos de Maven herencia, con este parámetros le indicamos que sólo genere la información de cambios en el proyecto padre. (Por defecto "true").
+    
+    * versionSuffix: El nombre de la versión es común que tenga un sufijo mientras se está desarrollando, por lo que al consultar en el Bugzilla se debe eliminar. (Por defecto "-SNAPSHOT").
+    
+    * bugsToClose: Identifica el "status" de los bugs que deben ser cerrados al generar la versión. (Por defecto "RESOLVED, CLOSED").
+    
+    * bugsToMove: Identifica el "status" de los bugs que deben ser movidos al nuevo "milestone". (Por defecto "UNCONFIRMED, NEW, ASSIGNED, REOPENED").
+    
+* Main    
+~~~~~~~~~~~~
+	Se ha incluido la posibilidad de utilizar el plugin fuera del contexto de Maven a través de la línea de comandos. Se ha añadido el método "main" que recoge la lista de argumentos y ejecuta el proceso contra el bugzilla. 
+	
+	
+
+
+
+
+
+
+
