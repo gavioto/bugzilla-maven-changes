@@ -18,6 +18,7 @@
 
 -->
 <project>
+	<version position="left" />
 	<body>
 		<links>
 			<item name="Maven" href="http://maven.apache.org/"/>
@@ -29,5 +30,13 @@
 			<item name="Desarrolladores" href="developers.html"/>
 			<item name="Línea de comandos" href="commandLine.html"/>
 		</menu>
+		
+		<menu ref="reports" />
 	</body>
+	
+	<poweredBy>
+		<logo name="Maven" href="http://maven.apache.org/" img="http://maven.apache.org/images/logos/maven-feather.png" />
+		<logo name="Autentia" href="http://www.autentia.com/" img="http://www.adictosaltrabajo.com/images/poweredByAutentia_100x30x72dpi.png" />
+		<logo name="sourceforge" href="http://sourceforge.net" img="http://sflogo.sourceforge.net/sflogo.php?group_id=246983&amp;type=1" width="88" height="31" border="0" alt="SourceForge.net Logo" />
+	</poweredBy>
 </project>

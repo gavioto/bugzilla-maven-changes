@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	
 	<modelVersion>4.0.0</modelVersion>
 	
@@ -12,6 +12,11 @@
 	<description>Plugin to close release on Bugzilla when make release with Maven</description>
 	<url>http://maven.apache.org</url>
 	
+	<organization>
+		<name>Autentia Real Business Solutions</name>
+		<url>http://www.autentia.com/</url>
+	</organization>
+	
 	<inceptionYear>2009</inceptionYear>
 	<licenses>
 		<license>
@@ -20,7 +25,7 @@
 			<distribution>manual</distribution>
 		</license>
 	</licenses>
-
+	
 	<developers>
 		<developer>
 			<id>blazaro</id>
@@ -30,36 +35,50 @@
 			<organizationUrl>http://www.autentia.com/</organizationUrl>
 		</developer>
 		<developer>
-			<id>alex</id>
+			<id>alejandropg</id>
 			<name>Alejandro Pérez García</name>
 			<email>alejandropg@autentia.com</email>
 			<organization>Autentia Real Business</organization>
 			<organizationUrl>http://www.autentia.com/</organizationUrl>
 		</developer>
 	</developers>
-
+	
 	<scm>
 		<connection>scm:svn:https://bugzillachanges.svn.sourceforge.net/svnroot/bugzillachanges/trunk/bugzillarelease</connection>
 		<developerConnection>scm:svn:https://bugzillachanges.svn.sourceforge.net/svnroot/bugzillachanges/trunk/bugzillarelease</developerConnection>
-		<url>http://bugzillachanges.svn.sourceforge.net/viewvc/bugzillachanges/trunk/bugzillarelease</url>
+		<url>https://bugzillachanges.svn.sourceforge.net/svnroot/bugzillachanges/trunk/bugzillarelease</url>
 	</scm>
-
+	
+	<properties>
+		<sourceEncoding>UTF-8</sourceEncoding>
+		<compileSource>1.5</compileSource>
+	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+	
 	<build>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
-					<encoding>UTF-8</encoding>
+					<source>${compileSource}</source>
+					<target>${compileSource}</target>
+					<encoding>${sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<encoding>${sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
 				<configuration>
-					<inputEncoding>UTF-8</inputEncoding>
-					<outputEncoding>UTF-8</outputEncoding>
+					<inputEncoding>${sourceEncoding}</inputEncoding>
+					<outputEncoding>${sourceEncoding}</outputEncoding>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -81,8 +100,65 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<!--
+					| Configures Surefire plugin (the test launcher) to always redirect the output (console) to a file. 
+				-->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<redirectTestOutputToFile>true</redirectTestOutputToFile>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-release-plugin</artifactId>
+				<configuration>
+					<username>${sourceforge.scm.username}</username>
+					<password>${sourceforge.scm.password}</password>
+					<tagBase>https://bugzillachanges.svn.sourceforge.net/viewvc/bugzillachanges/tags</tagBase>
+				</configuration>
+			</plugin>
+		
 		</plugins>
 	</build>
+	
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>taglist-maven-plugin</artifactId>
+				<configuration>
+					<tags>
+						<tag>TODO</tag>
+						<tag>FIXME</tag>
+						<tag>XXX</tag>
+						<tag>NOPMD</tag>
+					</tags>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</reporting>
+
+	<distributionManagement>
+		<site>
+			<id>sourceforge-bugzillaRelease-site</id>
+			<name>Autentia Bugzilla Release Site</name>
+			<url>scp://shell.sourceforge.net/home/groups/b/bu/bugzillachanges/htdocs/maven-site/bugzillaRelease</url>
+		</site>
+		<repository>
+			<id>sourceforge-bugzillaRelease-repository</id>
+			<name>Autentia Bugzilla Release Repository</name>
+			<url>scp://shell.sourceforge.net/home/groups/b/bu/bugzillachanges/htdocs/maven-repository</url>
+		</repository>
+	</distributionManagement>
 	
 	<dependencies>
 		<dependency>
