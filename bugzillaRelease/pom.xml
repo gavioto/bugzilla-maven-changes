@@ -115,7 +115,7 @@
 				<configuration>
 					<username>${sourceforge.scm.username}</username>
 					<password>${sourceforge.scm.password}</password>
-					<tagBase>https://bugzillachanges.svn.sourceforge.net/viewvc/bugzillachanges/tags</tagBase>
+					<tagBase>https://bugzillachanges.svn.sourceforge.net/svnroot/bugzillachanges/tags</tagBase>
 				</configuration>
 			</plugin>
 		
