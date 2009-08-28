@@ -5,7 +5,7 @@
 	
 	<groupId>com.autentia.mvn.plugin</groupId>
 	<artifactId>bugzillaRelease</artifactId>
-	<version>1.0</version>
+	<version>1.1-SNAPSHOT</version>
 	<packaging>maven-plugin</packaging>
 	
 	<name>Bugzilla Release Maven Mojo</name>
@@ -44,9 +44,9 @@
 	</developers>
 	
 	<scm>
-		<connection>scm:svn:https://bugzillachanges.svn.sourceforge.net/svnroot/bugzillachanges/tags/bugzillaRelease-1.0</connection>
-		<developerConnection>scm:svn:https://bugzillachanges.svn.sourceforge.net/svnroot/bugzillachanges/tags/bugzillaRelease-1.0</developerConnection>
-		<url>https://bugzillachanges.svn.sourceforge.net/svnroot/bugzillachanges/tags/bugzillaRelease-1.0</url>
+		<connection>scm:svn:https://bugzillachanges.svn.sourceforge.net/svnroot/bugzillachanges/trunk/bugzillarelease</connection>
+		<developerConnection>scm:svn:https://bugzillachanges.svn.sourceforge.net/svnroot/bugzillachanges/trunk/bugzillarelease</developerConnection>
+		<url>https://bugzillachanges.svn.sourceforge.net/svnroot/bugzillachanges/trunk/bugzillarelease</url>
 	</scm>
 	
 	<properties>
