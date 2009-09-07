@@ -153,7 +153,7 @@
 		<site>
 			<id>sourceforge-bugzillaRelease-site</id>
 			<name>Autentia Bugzilla Release Site</name>
-			<url>scp://shell.sourceforge.net/home/groups/b/bu/bugzillachanges/htdocs/maven-site/bugzillaRelease</url>
+			<url>scp://shell.sourceforge.net/home/groups/b/bu/bugzillachanges/htdocs/maven-site/bugzillaChanges</url>
 		</site>
 		<repository>
 			<id>sourceforge-bugzillaRelease-repository</id>
