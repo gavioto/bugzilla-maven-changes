@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
 
     bugzillaChanges Maven Mojo. Plugin to generate changes.xml form Bugzilla info, when make release with Maven.
@@ -21,17 +21,14 @@
 	<version position="left" />
 	<body>
 		<links>
-			<item name="Maven" href="http://maven.apache.org/"/>
+			<item name="Maven" href="http://maven.apache.org/" />
 		</links>
 
-		<!-- 
-		<menu name="Documentaci贸n">
-			<item name="Introducci贸n" href="index.html"/>
-			<item name="Instalaci贸n y configuraci贸n" href="installation.html"/>
-			<item name="Desarrolladores" href="developers.html"/>
-			<item name="L铆nea de comandos" href="commandLine.html"/>
+		<menu name="Documentaci髇">
+			<item name="Introducci髇" href="index.html" />
+			<item name="Instalaci髇 y configuraci髇" href="installation.html" />
+			<item name="Desarrolladores" href="developers.html" />
 		</menu>
-		-->
 		
 		<menu ref="reports" />
 	</body>

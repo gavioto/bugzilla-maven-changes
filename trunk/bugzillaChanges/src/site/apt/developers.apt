@@ -1,0 +1,79 @@
+~~
+~~ bugzillaChanges Maven Mojo. Plugin to generate changes.xml form Bugzilla info, when make release with Maven.
+~~ Copyright (C) 2009 Autentia Real Business Solutions S.L.
+~~
+~~ This program is free software: you can redistribute it and/or modify
+~~ it under the terms of the GNU General Public License as published by
+~~ the Free Software Foundation, either version 3 of the License.
+~~
+~~ This program is distributed in the hope that it will be useful,
+~~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+~~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+~~ GNU General Public License for more details.
+~~
+~~ You should have received a copy of the GNU General Public License
+~~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+~~
+
+Desarrolladores
+~~~~~~~~~~~~~~~~~~~
+
+	La solución adoptada para generar un informe de los cambios del Bugzilla, es crear un plugin de Maven que 
+	se conecte directamente al Bugzilla obteniendo la lista de bugs y genere el fichero "changes.xml" antes de que lo necesite el 
+	plugin de cambios de Maven para generar el histórico de cambios.
+
+	Para ver como empezar a crear un plugin de maven podéis ver este tutorial {{{http://www.adictosaltrabajo.com/tutoriales/tutoriales.php?pagina=PluginsMaven}("Desarrollo de Plugins para Maven")}} que explica como hacer un plugin de Maven sencillo.
+
+* Proceso principal    
+~~~~~~~~~~~~
+	El proceso principal del plugin se ejecuta en el método "execute()" de la clase "com.autentia.mvn.plugin.changes.bugzilla.ChangesMojo", realizando los siguientes pasos:
+	
+	* Preprocesamiento de parámetros: Para controlar si seguir con la ejecución y preparar los datos necesarios para el resto del proceso.
+	
+    * Login en el Bugzilla: Iniciamos una sesión con el servidor del Bugzilla.
+    
+    * Recuperar la lista de bugs del Bugzilla: Se obtiene como respuesta del Bugzilla un documento HTML, que para facilitar su procesamiento se convierte a XHTML por medio de JTidy.  
+    
+    * Recuperar el documento XML del Bugzilla con la información de los bugs de la lista: Se recupera el XML del Bugzilla.
+    
+    * Formar el "changes.xml" transformando el XML del bugzilla: Se realiza un procesamiento previo sobre el documento XML obtenido en el Bugzilla y finalmente se tranforma con XSL, obteniendo el "changes.xml".
+
+* Parámetros del plugin
+~~~~~~~~~~~~
+	Parámeteros que necesita nuestro plugin para interactuar con el Bugzilla, y generar el fichero "changes.xml":
+
+	* productName: Nombre del producto en el Bugzilla del que obtenemos la lista de bugs. Obligatorio. 
+	
+    * bugzillaUser: Usuario para el login en el Bugzilla. Obligatorio.
+    
+    * bugzillaPassword: Contraseña del usuario para el login en el Bugzilla. Obligatorio.
+    
+    * componentName: Nombre del componente en el Bugzilla del que obtendremos la lista de bugs. No se tiene en cuenta si se está generando el fichero de cambios únicamente del proyecto padre. (Por defecto el valor del elemento "<artifactId>").
+    
+    * resolution: Estado de resolución de los bugs a tener en cuenta. (Por defecto sólo se tienen en cuenta los que tienen estado "FIXED").
+    
+    * loginPage: Página de login en el Bugzilla. (Por defecto "index.cgi").
+    
+    * xmlPath: Ruta donde se generará el fichero changes.xml que debe ser la misma que la que definamos en el maven-changes-plugin. Por defecto "src/changes/changes.xml").
+    
+    * loginRequired: Parámetro para indicar si es necesario hacer login en el Bugzilla para recuperar la lista de bugs. (Por defecto "true").
+    
+    * parentOnly: Al tener los proyectos de Maven herencia, con este parámetros le indicamos que sólo genere la información de cambios en el proyecto padre. (Por defecto "true").
+    
+    * fitDevelopers: La información del Bugzilla nos indica quién tiene asignado el bug como una dirección de correo. Con este parámetro indicamos que la información correspondiente al desarrollador que va a ir en el "changes.xml" se ajuste al usuario de la cuenta. (p.e. si tenemos "usuario@dominio.com" se quedaría con "usuario"). (Por defecto "true").
+    
+    * currentVersionOnly: Debido a que la lista de bugs de todas las versiones del producto puede ser muy larga, con este parámetro indicamos que sólo tenga en cuenta la versión actual (definida en el POM). Si ya tenemos un fichero changes.xml, con este parámetro lo que hacemos es añadir o sustituir los cambios de esta versión. Si está a "true" se genera la fecha de la versión con la fecha actual, para el resto de casos la fecha de la versión se deja en blanco. (Por defecto "true").
+    
+    * versionSuffix: El nombre de la versión es común que tenga un sufijo mientras se está desarrollando, por lo que al consultar en el Bugzilla se debe eliminar. (Por defecto "-SNAPSHOT").
+    
+    * componentNamePrefix2Remove: El nombre de los módulos puede que tengan un prefijo común que no están en el nombre del componente en el Bugzilla. Con este parámetro indicamos cual es dicho prefijo que será eliminado para hacer la consulta en el Bugzilla. (Por defecto "").
+    
+
+	
+
+
+
+
+
+
+

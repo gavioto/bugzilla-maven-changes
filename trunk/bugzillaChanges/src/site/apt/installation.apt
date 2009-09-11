@@ -1,0 +1,176 @@
+~~
+~~ bugzillaChanges Maven Mojo. Plugin to generate changes.xml form Bugzilla info, when make release with Maven.
+~~ Copyright (C) 2009 Autentia Real Business Solutions S.L.
+~~
+~~ This program is free software: you can redistribute it and/or modify
+~~ it under the terms of the GNU General Public License as published by
+~~ the Free Software Foundation, either version 3 of the License.
+~~
+~~ This program is distributed in the hope that it will be useful,
+~~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+~~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+~~ GNU General Public License for more details.
+~~
+~~ You should have received a copy of the GNU General Public License
+~~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+~~
+
+Instalación y configuración
+~~~~~~~~~~~~~~~~~~~
+
+* Instalación
+~~~~~~~~~~~~
+
+	Para utilizar el plugin de cambios, debemos tener instalado en el repositorio local el fichero ".jar" del plugin. 
+	Esto lo podemos hacer bien por configuración en el fichero POM del proyecto en el que queramos usar el plugin o bien de forma manual.  
+
+** Instalación por medio del POM
+~~~~~~~~~~~~
+
+	Hay que dar de alta un nuevo repositorio para que sea el propio Maven el encargado de descargarse a nuestro repositorio local el plugin de cambios. 
+	Debemos añadir la siguiente configuración:
+
++-------------+
+<pluginRepositories>
+	<pluginRepository>
+	    <id>AutentiaBugzillaMaven-release</id>
+	    <name>Local Maven repository of releases</name>
+	    <url>http://bugzillachanges.sourceforge.net/maven-repository</url>
+	    <snapshots>
+	        <enabled>false</enabled>
+	    </snapshots>
+	    <releases>
+	        <enabled>true</enabled>
+	    </releases>
+	</pluginRepository>
+</pluginRepositories> 
++-------------+  
+
+
+** Instalación manual
+~~~~~~~~~~~~
+	
+	Descargamos el fichero ".jar" del plugin y lo instalamos en el repositorio local para poderlo usarlo en el resto de proyectos.
+	Para instalarlo en nuestro repositorio local debemo ejecutar:
+	
++-------------+
+mvn install:install-file -DartifactId=changesBugzilla -DgroupId=com.autentia.mvn.plugin -Dversion=***VERSION DEL PLUGIN*** 
+-DgeneratePom=true -Dfile=***FIHERO JAR*** -Dpackaging=jar 
++-------------+	
+	
+
+
+* Configuración del pom.xml de los proyectos que utilizan el plugin
+~~~~~~~~~~~~
+
+  Para que el plugin genere el fichero "changes.xml" debemos configurarlo en el fichero "pom.xml", 
+  teniendo en cuenta que toma como URL base del bugzilla la URL que esté configurada en el elemento <issueManagement>, 
+  y que debemos adaptar la configuración del plugin maven-changes-plugin para que genere correctamente los enlaces.
+  
++-------------+
+<project ...>
+  .....    
+  <issueManagement>
+  	<system>Bugzilla</system>
+  	<url>https://host/cgi-bin/bugzilla3/</url>
+  </issueManagement>
+  .....
+  <build>
+		<plugins>
+      .....
+			<plugin>
+				<groupId>com.autentia.mvn.plugin</groupId>
+				<artifactId>bugzillaChanges</artifactId>
+				<version> *** versión del plugin *** </version>
+				<configuration>
+        			<productName> *** nombre del producto en el bugzilla *** </productName>
+        			<bugzillaUser>*** usuario del bugzilla ***</bugzillaUser>
+        			<bugzillaPassword>*** contraseña del usuario del bugzilla ***</bugzillaPassword>
+				</configuration>
+			  <executions>
+					<execution>
+						<phase>pre-site</phase>
+						<goals>
+							<goal>changes-generate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	.....
+  <reporting>
+  	<plugins>
+  		.....
+  		<plugin>
+  			<groupId>org.apache.maven.plugins</groupId>
+  			<artifactId>maven-changes-plugin</artifactId>
+  			<version>2.0</version>
+  			<configuration>
+  				<issueLinkTemplate>%URL%/show_bug.cgi?id=%ISSUE%</issueLinkTemplate>
+  			</configuration>
+  			<reportSets>
+  				<reportSet>
+  					<reports>
+  						<report>changes-report</report>
+  					</reports>
+  				</reportSet>
+  			</reportSets>
+  		</plugin>
+  		.....
+  	</plugins>
+  </reporting>
+  .....
+  <pluginRepositories>
+	  <pluginRepository>
+		  <id>AutentiaBugzillaMaven-release</id>
+		  <name>Local Maven repository of releases</name>
+		  <url>http://bugzillachanges.sourceforge.net/maven-repository</url>
+		  <snapshots>
+		  	<enabled>false</enabled>
+		  </snapshots>
+		  <releases>
+		  	<enabled>true</enabled>
+		  </releases>
+	  </pluginRepository>
+  </pluginRepositories>
+  .....
+</project>    
++-------------+  
+
+* Parámetros de configuración
+~~~~~~~~~~~~
+
+	* productName: Nombre del producto en el Bugzilla del que obtenemos la lista de bugs. Obligatorio. 
+	
+    * bugzillaUser: Usuario para el login en el Bugzilla. Obligatorio.
+    
+    * bugzillaPassword: Contraseña del usuario para el login en el Bugzilla. Obligatorio.
+    
+    * componentName: Nombre del componente en el Bugzilla del que obtendremos la lista de bugs. No se tiene en cuenta si se está generando el fichero de cambios únicamente del proyecto padre. (Por defecto el valor del elemento "<artifactId>").
+    
+    * resolution: Estado de resolución de los bugs a tener en cuenta. (Por defecto sólo se tienen en cuenta los que tienen estado "FIXED").
+    
+    * loginPage: Página de login en el Bugzilla. (Por defecto "index.cgi").
+    
+    * xmlPath: Ruta donde se generará el fichero changes.xml que debe ser la misma que la que definamos en el maven-changes-plugin. Por defecto "src/changes/changes.xml").
+    
+    * loginRequired: Parámetro para indicar si es necesario hacer login en el Bugzilla para recuperar la lista de bugs. (Por defecto "true").
+    
+    * parentOnly: Al tener los proyectos de Maven herencia, con este parámetros le indicamos que sólo genere la información de cambios en el proyecto padre. (Por defecto "true").
+    
+    * fitDevelopers: La información del Bugzilla nos indica quién tiene asignado el bug como una dirección de correo. Con este parámetro indicamos que la información correspondiente al desarrollador que va a ir en el "changes.xml" se ajuste al usuario de la cuenta. (p.e. si tenemos "usuario@dominio.com" se quedaría con "usuario"). (Por defecto "true").
+    
+    * currentVersionOnly: Debido a que la lista de bugs de todas las versiones del producto puede ser muy larga, con este parámetro indicamos que sólo tenga en cuenta la versión actual (definida en el POM). Si ya tenemos un fichero changes.xml, con este parámetro lo que hacemos es añadir o sustituir los cambios de esta versión. Si está a "true" se genera la fecha de la versión con la fecha actual, para el resto de casos la fecha de la versión se deja en blanco. (Por defecto "true").
+    
+    * versionSuffix: El nombre de la versión es común que tenga un sufijo mientras se está desarrollando, por lo que al consultar en el Bugzilla se debe eliminar. (Por defecto "-SNAPSHOT").
+    
+    * componentNamePrefix2Remove: El nombre de los módulos puede que tengan un prefijo común que no están en el nombre del componente en el Bugzilla. Con este parámetro indicamos cual es dicho prefijo que será eliminado para hacer la consulta en el Bugzilla. (Por defecto "").
+	
+
+
+
+
+
+
+
