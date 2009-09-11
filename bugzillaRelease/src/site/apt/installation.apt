@@ -30,7 +30,35 @@
 Instalación y configuración
 ~~~~~~~~~~~~~~~~~~~
 
-* Instalación en el repositorio local
+* Instalación
+~~~~~~~~~~~~
+
+	Para utilizar el plugin de cambios, debemos tener instalado en el repositorio local el fichero ".jar" del plugin. 
+	Esto lo podemos hacer bien por configuración en el fichero POM del proyecto en el que queramos usar el plugin o bien de forma manual.  
+
+** Instalación por medio del POM
+~~~~~~~~~~~~
+
+	Hay que dar de alta un nuevo repositorio para que sea el propio Maven el encargado de descargarse a nuestro repositorio local el plugin de cambios. 
+	Debemos añadir la siguiente configuración:
+
++-------------+
+<pluginRepositories>
+	<pluginRepository>
+	    <id>AutentiaBugzillaMaven-release</id>
+	    <name>Local Maven repository of releases</name>
+	    <url>http://bugzillachanges.sourceforge.net/maven-repository</url>
+	    <snapshots>
+	        <enabled>false</enabled>
+	    </snapshots>
+	    <releases>
+	        <enabled>true</enabled>
+	    </releases>
+	</pluginRepository>
+</pluginRepositories> 
++-------------+  
+
+** Instalación en el repositorio local
 ~~~~~~~~~~~~
 	
 	Descargamos el fichero ".jar" del plugin y lo instalamos en el repositorio local para poder usarlo en el resto de proyectos.
@@ -62,7 +90,7 @@ mvn install:install-file -DartifactId=releaseBugzilla -DgroupId=com.autentia.mvn
             .....
 			<plugin>
 				<groupId>com.autentia.mvn.plugin</groupId>
-				<artifactId>releaseBugzilla</artifactId>
+				<artifactId>bugzillaRelease</artifactId>
 				<version> *** versión del plugin *** </version>
 				<configuration>
         			<productName> *** nombre del producto en el bugzilla *** </productName>
@@ -72,6 +100,20 @@ mvn install:install-file -DartifactId=releaseBugzilla -DgroupId=com.autentia.mvn
 			</plugin>
 		</plugins>
   </build>
+  .....
+  <pluginRepositories>
+	  <pluginRepository>
+		  <id>AutentiaBugzillaMaven-release</id>
+		  <name>Local Maven repository of releases</name>
+		  <url>http://bugzillachanges.sourceforge.net/maven-repository</url>
+		  <snapshots>
+		  	<enabled>false</enabled>
+		  </snapshots>
+		  <releases>
+		  	<enabled>true</enabled>
+		  </releases>
+	  </pluginRepository>
+  </pluginRepositories>
   .....
 </project>    
 +-------------+  
