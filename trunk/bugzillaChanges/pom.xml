@@ -45,7 +45,7 @@
 	<scm>
 		<connection>scm:svn:https://bugzillachanges.svn.sourceforge.net/svnroot/bugzillachanges/trunk/bugzillaChanges</connection>
 		<developerConnection>scm:svn:https://bugzillachanges.svn.sourceforge.net/svnroot/bugzillachanges/trunk/bugzillaChanges</developerConnection>
-		<url>https://bugzillachanges.svn.sourceforge.net/svnroot/bugzillachanges/trunk/bugzillaChanges</url>
+		<url>http://bugzillachanges.svn.sourceforge.net/viewvc/bugzillachanges</url>
 	</scm>
 	
 	<properties>
@@ -81,7 +81,7 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>com.google.code.maven-license-plugin</groupId>
+				<groupId>com.mycila.maven-license-plugin</groupId>
 				<artifactId>maven-license-plugin</artifactId>
 				<configuration>
 					<header>src/main/config/copyrightNotice.txt</header>
